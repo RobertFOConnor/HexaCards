@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: a008364b560851046982614064881426
+timeCreated: 1508007249
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - cardPrefab: {fileID: 1834919525991208, guid: dd5385f3807fd6448b1cd5a4180d71c3,
+      type: 2}
+  - ParentPanel: {instanceID: 0}
+  - unitPrefab: {instanceID: 0}
+  - ourHex: {instanceID: 0}
+  - selectedHex: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
