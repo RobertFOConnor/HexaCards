@@ -1,15 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Map : MonoBehaviour {
 
 	public GameObject hexPrefab;
+    public GameObject shipPrefab;
 
-	// Size of the map in terms of number of hex tiles
-	// This is NOT representative of the amount of 
-	// world space that we're going to take up.
-	// (i.e. our tiles might be more or less than 1 Unity World Unit)
-	int width = 3;
+    public List<GameObject> userGrid, enemyGrid;
+    public List<GameObject> userShips, enemyShips;
+
+    // Size of the map in terms of number of hex tiles
+    // This is NOT representative of the amount of 
+    // world space that we're going to take up.
+    // (i.e. our tiles might be more or less than 1 Unity World Unit)
+    int width = 3;
 	int height = 5;
 
 	float xOffset = 0.882f;
@@ -30,7 +35,35 @@ public class Map : MonoBehaviour {
             startX += 4;
         }
 
-        for (int x = startX; x < width+startX; x++)
+        for (int y = 0; y < height; y++)
+        {
+            float shipX = startX - 1;
+            int rotation = 90;
+            if (!isPlayer1) {
+                shipX = startX + 2.8f;
+                rotation = -90;
+            }
+
+            GameObject ship_go = Instantiate(shipPrefab, new Vector3(shipX, 0, y * zOffset), Quaternion.identity);
+            // For a cleaner hierachy, parent this hex to the map
+            ship_go.transform.SetParent(this.transform);
+            ship_go.transform.Rotate(new Vector3(0, rotation, 0), Space.World);
+
+            // TODO: Quill needs to explain different optimization later...
+            ship_go.isStatic = true;
+
+            if (isPlayer1)
+            {
+                ship_go.name = "Ship_" + y;
+                userShips.Add(ship_go);
+            }
+            else {
+                ship_go.name = "Ship_e_" + y;
+                enemyShips.Add(ship_go);
+            }
+        }
+
+            for (int x = startX; x < width+startX; x++)
         {
             for (int y = 0; y < height; y++)
             {
@@ -57,7 +90,6 @@ public class Map : MonoBehaviour {
                     xCoord = x - startX;
                     xCoord = width-1-xCoord;
                     name = "Hex_e_" + xCoord + "_" + y;
-                    print(name);
                 }
 
                 GameObject hex_go = Instantiate(hexPrefab, new Vector3(xPos, 0, y * zOffset), Quaternion.identity);
@@ -75,6 +107,14 @@ public class Map : MonoBehaviour {
 
                 // TODO: Quill needs to explain different optimization later...
                 hex_go.isStatic = true;
+
+                if (isPlayer1)
+                {
+                    userGrid.Add(hex_go);
+                }
+                else {
+                    enemyGrid.Add(hex_go);
+                }
 
             }
         }

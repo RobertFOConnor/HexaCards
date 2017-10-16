@@ -84,7 +84,7 @@ ModelImporter:
     400074: //RootNode
     400076: MutantMesh
     4300000: MutantMesh
-    7400000: mixamo.com
+    7400000: Idle
     9500000: //RootNode
     13700000: MutantMesh
   materials:
@@ -107,7 +107,113 @@ ModelImporter:
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Idle
+      takeName: mixamo.com
+      firstFrame: 0
+      lastFrame: 59
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Mutant:Hips
+        weight: 1
+      - path: Mutant:Hips/Mutant:LeftUpLeg
+        weight: 1
+      - path: Mutant:Hips/Mutant:LeftUpLeg/Mutant:LeftLeg
+        weight: 1
+      - path: Mutant:Hips/Mutant:LeftUpLeg/Mutant:LeftLeg/Mutant:LeftFoot
+        weight: 1
+      - path: Mutant:Hips/Mutant:LeftUpLeg/Mutant:LeftLeg/Mutant:LeftFoot/Mutant:LeftToeBase
+        weight: 1
+      - path: Mutant:Hips/Mutant:LeftUpLeg/Mutant:LeftLeg/Mutant:LeftFoot/Mutant:LeftToeBase/Mutant:LeftToe_End
+        weight: 1
+      - path: Mutant:Hips/Mutant:RightUpLeg
+        weight: 1
+      - path: Mutant:Hips/Mutant:RightUpLeg/Mutant:RightLeg
+        weight: 1
+      - path: Mutant:Hips/Mutant:RightUpLeg/Mutant:RightLeg/Mutant:RightFoot
+        weight: 1
+      - path: Mutant:Hips/Mutant:RightUpLeg/Mutant:RightLeg/Mutant:RightFoot/Mutant:RightToeBase
+        weight: 1
+      - path: Mutant:Hips/Mutant:RightUpLeg/Mutant:RightLeg/Mutant:RightFoot/Mutant:RightToeBase/Mutant:RightToe_End
+        weight: 1
+      - path: Mutant:Hips/Mutant:Spine
+        weight: 1
+      - path: Mutant:Hips/Mutant:Spine/Mutant:Spine1
+        weight: 1
+      - path: Mutant:Hips/Mutant:Spine/Mutant:Spine1/Mutant:Spine2
+        weight: 1
+      - path: Mutant:Hips/Mutant:Spine/Mutant:Spine1/Mutant:Spine2/Mutant:LeftShoulder
+        weight: 1
+      - path: Mutant:Hips/Mutant:Spine/Mutant:Spine1/Mutant:Spine2/Mutant:LeftShoulder/Mutant:LeftArm
+        weight: 1
+      - path: Mutant:Hips/Mutant:Spine/Mutant:Spine1/Mutant:Spine2/Mutant:LeftShoulder/Mutant:LeftArm/Mutant:LeftForeArm
+        weight: 1
+      - path: Mutant:Hips/Mutant:Spine/Mutant:Spine1/Mutant:Spine2/Mutant:LeftShoulder/Mutant:LeftArm/Mutant:LeftForeArm/Mutant:LeftHand
+        weight: 1
+      - path: Mutant:Hips/Mutant:Spine/Mutant:Spine1/Mutant:Spine2/Mutant:Neck
+        weight: 1
+      - path: Mutant:Hips/Mutant:Spine/Mutant:Spine1/Mutant:Spine2/Mutant:Neck/Mutant:Head
+        weight: 1
+      - path: Mutant:Hips/Mutant:Spine/Mutant:Spine1/Mutant:Spine2/Mutant:Neck/Mutant:Head/Mutant:HeadTop_End
+        weight: 1
+      - path: Mutant:Hips/Mutant:Spine/Mutant:Spine1/Mutant:Spine2/Mutant:RightShoulder
+        weight: 1
+      - path: Mutant:Hips/Mutant:Spine/Mutant:Spine1/Mutant:Spine2/Mutant:RightShoulder/Mutant:RightArm
+        weight: 1
+      - path: Mutant:Hips/Mutant:Spine/Mutant:Spine1/Mutant:Spine2/Mutant:RightShoulder/Mutant:RightArm/Mutant:RightForeArm
+        weight: 1
+      - path: Mutant:Hips/Mutant:Spine/Mutant:Spine1/Mutant:Spine2/Mutant:RightShoulder/Mutant:RightArm/Mutant:RightForeArm/Mutant:RightHand
+        weight: 1
+      - path: Mutant:Hips/Mutant:Spine/Mutant:Spine1/Mutant:Spine2/Mutant:RightShoulder/Mutant:RightArm/Mutant:RightForeArm/Mutant:RightHand/Mutant:RightHandIndex1
+        weight: 1
+      - path: Mutant:Hips/Mutant:Spine/Mutant:Spine1/Mutant:Spine2/Mutant:RightShoulder/Mutant:RightArm/Mutant:RightForeArm/Mutant:RightHand/Mutant:RightHandIndex1/Mutant:RightHandIndex2
+        weight: 1
+      - path: Mutant:Hips/Mutant:Spine/Mutant:Spine1/Mutant:Spine2/Mutant:RightShoulder/Mutant:RightArm/Mutant:RightForeArm/Mutant:RightHand/Mutant:RightHandIndex1/Mutant:RightHandIndex2/Mutant:RightHandIndex3
+        weight: 1
+      - path: Mutant:Hips/Mutant:Spine/Mutant:Spine1/Mutant:Spine2/Mutant:RightShoulder/Mutant:RightArm/Mutant:RightForeArm/Mutant:RightHand/Mutant:RightHandIndex1/Mutant:RightHandIndex2/Mutant:RightHandIndex3/Mutant:RightHandIndex4
+        weight: 1
+      - path: Mutant:Hips/Mutant:Spine/Mutant:Spine1/Mutant:Spine2/Mutant:RightShoulder/Mutant:RightArm/Mutant:RightForeArm/Mutant:RightHand/Mutant:RightHandPinky1
+        weight: 1
+      - path: Mutant:Hips/Mutant:Spine/Mutant:Spine1/Mutant:Spine2/Mutant:RightShoulder/Mutant:RightArm/Mutant:RightForeArm/Mutant:RightHand/Mutant:RightHandPinky1/Mutant:RightHandPinky2
+        weight: 1
+      - path: Mutant:Hips/Mutant:Spine/Mutant:Spine1/Mutant:Spine2/Mutant:RightShoulder/Mutant:RightArm/Mutant:RightForeArm/Mutant:RightHand/Mutant:RightHandPinky1/Mutant:RightHandPinky2/Mutant:RightHandPinky3
+        weight: 1
+      - path: Mutant:Hips/Mutant:Spine/Mutant:Spine1/Mutant:Spine2/Mutant:RightShoulder/Mutant:RightArm/Mutant:RightForeArm/Mutant:RightHand/Mutant:RightHandPinky1/Mutant:RightHandPinky2/Mutant:RightHandPinky3/Mutant:RightHandPinky4
+        weight: 1
+      - path: Mutant:Hips/Mutant:Spine/Mutant:Spine1/Mutant:Spine2/Mutant:RightShoulder/Mutant:RightArm/Mutant:RightForeArm/Mutant:RightHand/Mutant:RightHandThumb1
+        weight: 1
+      - path: Mutant:Hips/Mutant:Spine/Mutant:Spine1/Mutant:Spine2/Mutant:RightShoulder/Mutant:RightArm/Mutant:RightForeArm/Mutant:RightHand/Mutant:RightHandThumb1/Mutant:RightHandThumb2
+        weight: 1
+      - path: Mutant:Hips/Mutant:Spine/Mutant:Spine1/Mutant:Spine2/Mutant:RightShoulder/Mutant:RightArm/Mutant:RightForeArm/Mutant:RightHand/Mutant:RightHandThumb1/Mutant:RightHandThumb2/Mutant:RightHandThumb3
+        weight: 1
+      - path: Mutant:Hips/Mutant:Spine/Mutant:Spine1/Mutant:Spine2/Mutant:RightShoulder/Mutant:RightArm/Mutant:RightForeArm/Mutant:RightHand/Mutant:RightHandThumb1/Mutant:RightHandThumb2/Mutant:RightHandThumb3/Mutant:RightHandThumb4
+        weight: 1
+      - path: MutantMesh
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []
