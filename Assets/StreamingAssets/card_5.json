@@ -1,0 +1,17 @@
+{
+	"id" : 5,
+	"name" : "Zorgon Leader",
+	"description" : "kinfolk veteran",
+	"resourceCost" : 5,
+	"type" : "Alien",
+	"rarity" : 2,
+	"attack" : 3, 
+	"health" : 3,
+	"countdown" : 2,
+
+	"Items": [
+		{
+			"trigger" : "haste"
+		}
+    ]
+}

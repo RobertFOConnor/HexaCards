@@ -1,0 +1,15 @@
+{
+	"id" : 8,
+	"name" : "Beast Rat",
+	"description" : "Beast Rat",
+	"resourceCost" : 1,
+	"type" : "Human",
+	"rarity" : 2,
+	"attack" : 1, 
+	"health" : 2,
+	"countdown" : 2,
+
+	"Items": [
+
+    ]
+}

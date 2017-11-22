@@ -1,0 +1,19 @@
+{
+	"id" : 3,
+	"name" : "Parasite",
+	"description" : "Sister of the fox",
+	"resourceCost" : 2,
+	"type" : "Alien",
+	"rarity" : 2,
+	"attack" : 1, 
+	"health" : 1,
+	"countdown" : 2,
+
+	"Items": [
+		{
+            "trigger": "onSummon",
+            "stat": "draw",
+            "amount": 1
+        }
+    ]
+}

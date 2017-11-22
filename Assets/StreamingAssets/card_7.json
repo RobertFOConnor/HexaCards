@@ -1,0 +1,15 @@
+{
+	"id" : 7,
+	"name" : "Outcast Rebel",
+	"description" : "Outcast Rebel",
+	"resourceCost" : 2,
+	"type" : "Human",
+	"rarity" : 2,
+	"attack" : 4, 
+	"health" : 3,
+	"countdown" : 3,
+
+	"Items": [
+
+    ]
+}

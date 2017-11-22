@@ -1,0 +1,19 @@
+{
+	"id" : 9,
+	"name" : "Breaker",
+	"description" : "Breaker",
+	"resourceCost" : 3,
+	"type" : "Human",
+	"rarity" : 2,
+	"attack" : 3, 
+	"health" : 3,
+	"countdown" : 2,
+
+	"Items": [
+		{
+            "trigger": "onAttack",
+            "stat": "attack",
+            "amount": 1
+        }
+    ]
+}

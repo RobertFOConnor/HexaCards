@@ -1,0 +1,15 @@
+{
+	"id" : 4,
+	"name" : "Infected Passenger",
+	"description" : "Kinfolk brave",
+	"resourceCost" : 2,
+	"type" : "Alien",
+	"rarity" : 2,
+	"attack" : 2, 
+	"health" : 2,
+	"countdown" : 1,
+
+	"Items": [
+
+    ]
+}

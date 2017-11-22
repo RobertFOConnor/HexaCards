@@ -7,73 +7,75 @@ using System;
 public class MouseManager : MonoBehaviour
 {
 
-    public GameObject cardPrefab;
-    public RectTransform ParentPanel;
     public Text playerName, resourcesText;
-    public Button sacResButton, sacCardButton, endTurnButton;
+    public Text enemyName, enemyResourcesText;
+    public Button endTurnButton;
     public Map map;
+    public SacrificeMenu sacMenu;
+    public HandCardsUI handUI;
 
-    private List<GameObject> cards = new List<GameObject>();
-    private float cardSelectOffset = 70f;
-    private GameObject selectedCard;
-    private GameObject ourHex, selectedHex;
+    private Hex ourHex, selectedHex;
+    public Camera cam;
+    public AttackManager attackManager;
 
-    Color hoverColor = Color.white;
-    Color selectedColor = Color.cyan * Mathf.LinearToGammaSpace(400f);
-    Color unselectedColor = new Color(1f, 1f, 1f, 50f/255f);
+    private static string STATE = "";
 
-    private string STATE = "";
-
-    private Player player;
+    private Player player, enemyPlayer;
+    private Context context = new Context();
 
     void Start()
     {
-        player = new Player("Bobby", Card.getTestCards(), true);
+        List<Card> deck = new List<Card>();
+        List<Card> edeck = new List<Card>();
 
-        hoverColor.a = 0.5f;
-        selectedColor.a = 0.5f;
-
-        for (int i = 0; i < player.getHand().Count; i++)
-        {
-            Card card = player.getHand()[i];
-            addCardGUI(card);
+        for (int i = 1; i <= 10; i++) {
+            deck.Add(CardFactory.buildCard(i));
+            edeck.Add(CardFactory.buildCard(i));
         }
 
 
+        player = new Player("Bobby", deck, true);
+        enemyPlayer = new Player("Jack", edeck, false);
+
+        player.setHandUI(handUI);
+        sacMenu.initVars(player);
+
         playerName.text = player.getName();
-        resourcesText.text = player.getBaseRes()+"/"+player.getCurrRes();
-
-        Button sacRes = sacResButton.GetComponent<Button>();
-        sacRes.onClick.AddListener(sacForResClicked);
-
-        Button sacCards = sacCardButton.GetComponent<Button>();
-        sacCards.onClick.AddListener(sacForCardsClicked);
+        enemyName.text = enemyPlayer.getName();
 
         Button endTurn = endTurnButton.GetComponent<Button>();
         endTurn.onClick.AddListener(endTurnClicked);
 
-    }
-
-
-    void addCardGUI(Card card) {
-        GameObject goButton = Instantiate(cardPrefab);
-        goButton.transform.SetParent(ParentPanel, false);
-        goButton.transform.localScale = new Vector3(1, 1, 1);
-        goButton.GetComponent<CardUI>().title.text = card.getName();
-        goButton.GetComponent<CardUI>().resources.text = card.getCost() + "";
-
-        Button tempButton = goButton.GetComponent<Button>();
-        cards.Add(goButton);
-
-        tempButton.onClick.AddListener(() => cardClicked(goButton));
+        context.setGameState(new NullState(context));
     }
 
     void Update()
     {
+        if (STATE == "ATTACK_PHASE" || STATE == "ENEMY_ATTACK_PHASE")
+        {
+            if (attackManager.currAttackerIsFinished())
+            {              
+                bool myAttackPhase = (STATE == "ATTACK_PHASE");
+                if (!attackManager.isThereNextAttacker(myAttackPhase))
+                {
+                    STATE = "";
+                    if (!myAttackPhase)
+                    {
+                        startPlayerTurn();
+                    }
+                    else
+                    {
+                        startEnemyTurn();
+                    }                  
+                }
+            }
+        }
+
 
         // Is the mouse over a Unity UI Element?
         if (EventSystem.current.IsPointerOverGameObject())
         {
+            unHoverHex();
             return;
         }
         // could also check if game is paused?
@@ -89,24 +91,20 @@ public class MouseManager : MonoBehaviour
             {
                 GameObject ourHitObject = hitInfo.collider.transform.parent.gameObject;
 
-                if (ourHitObject.GetComponent<Hex>() != null)
+                Hex hex = ourHitObject.GetComponent<Hex>();
+                if (hex != null)
                 {
-                    MouseOver_Hex(ourHitObject);
+                    MouseOver_Hex(hex);
                 }
             }
-            catch (NullReferenceException e) {
-                if (ourHex != null)
-                {
-                    hoverHex(false);
-                }
+            catch (NullReferenceException e)
+            {
+                unHoverHex();
             }
         }
         else
         {
-            if (ourHex != null)
-            {
-                hoverHex(false);
-            }
+            unHoverHex();
         }
 
         // If this were an FPS, what you'd do is probably something like this:
@@ -114,20 +112,28 @@ public class MouseManager : MonoBehaviour
         //Ray fpsRay = new Ray( Camera.main.transform.position, Camera.main.transform.forward );
     }
 
-    void MouseOver_Hex(GameObject ourHitObject)
+    void unHoverHex() {
+        if (ourHex != null)
+        {
+            ourHex.seHovering(false);
+        }
+    }
+
+    void MouseOver_Hex(Hex ourHitObject)
     {
-        Debug.Log("Raycast hit: " + ourHitObject.name);
-        
-        if (ourHex == null) {
+        //Debug.Log("Raycast hit: " + ourHitObject.name);
+
+        if (ourHex == null)
+        {
             ourHex = ourHitObject;
-            hoverHex(true);    
+            ourHex.seHovering(true);
         }
 
         if (!ourHex.Equals(ourHitObject)) //If we're not still hovering on the same hex
         {
-            hoverHex(false);
+            ourHex.seHovering(false);
             ourHex = ourHitObject;
-            hoverHex(true);
+            ourHex.seHovering(true);
         }
 
 
@@ -135,220 +141,32 @@ public class MouseManager : MonoBehaviour
         {
 
             // We have clicked on a hex.  Do something about it!
-            // This might involve calling a bunch of other functions
-            // depending on what mode you happen to be in, in your game.
-            Unit unit = ourHex.GetComponent<Hex>().unit;
 
-            if (STATE.Equals("UNIT_SELECTED"))
+            Unit unit = ourHex.getUnit();
+
+            if (unit != null)
             {
-                if (ourHex.Equals(selectedHex))
-                {
-                    STATE = "";
-                    deselectHex();
-                }
-                else if (unit != null)
-                {
-                    deselectHex();
-                    selectHex();
-                }
-                else if (!isEnemyHex()) //Moving unit
-                {
-                    STATE = "";
-                    ourHex.GetComponent<Hex>().unit = selectedHex.GetComponent<Hex>().unit;
-                    selectedHex.GetComponent<Hex>().unit = null;
-                    // If we have a unit selected, let's move it to this tile!
-                    ourHex.GetComponent<Hex>().unit.destination = ourHitObject.transform.position;
-                    deselectHex();
-                }
+                context.getGameState().onUnitClicked(ourHex);
             }
-            else if (STATE.Equals("CARD_SELECTED")) {
-
-                if (ourHex.GetComponent<Hex>().unit == null)
-                {
-                    if (!isEnemyHex() && getSelCard().getCost() <= player.getCurrRes())
-                    {
-                        summonUnit(ourHex);
-                    }
-
-                    print(getSelCard().getCost());
-                }
-                else {
-                    selectUnit(unit);
-                }
-
-
-            } else {
-                if (selectedHex == null)
-                {
-                    selectUnit(unit);
-                }
+            else {
+                context.getGameState().onHexClicked(ourHex);
             }
         }
     }
 
-    void selectUnit(Unit unit) {
-        if (unit != null)
-        {
-            STATE = "UNIT_SELECTED";
-            selectHex();
-            setCardSelected(false);
-            selectedCard = null;
-        }
+    public Context getContext() {
+        return context;
     }
 
-    bool isEnemyHex() {
-        return ourHex.name.StartsWith("Hex_e_");
-    }
 
-    void selectHex() {
-        selectedHex = ourHex;
-        selectedHex.GetComponent<Hex>().isSelected = true;
-        changeColor(selectedHex, selectedColor);
-    }
 
-    void deselectHex() {
-        if (selectedHex != null)
-        {
-            changeColor(selectedHex, unselectedColor);
-            selectedHex.GetComponent<Hex>().isSelected = false;
-            selectedHex = null;
-        }
-    }
-
-    
-
-    void hoverHex(bool selected)
+    public Player getPlayer()
     {
-        Color c = hoverColor;
-        if (!selected)
-        {
-            c = unselectedColor;
-        }
-
-        if (!ourHex.GetComponent<Hex>().isSelected)
-        {
-            changeColor(ourHex, c);
-        }
-        for (int i = 0; i < 3; i++)
-        {
-            GameObject enemyHex = GameObject.Find("Hex_e_" + i + "_" + ourHex.GetComponent<Hex>().y);
-            if (enemyHex != null)
-            {
-                changeColor(enemyHex, c);
-            }
-        }
+        return player;
     }
 
-    void changeColor(GameObject go, Color c)
+    void printHand()
     {
-        MeshRenderer mr = go.GetComponentInChildren<MeshRenderer>();
-        mr.material.color = c;
-    }
-
-    void cardClicked(GameObject goButton)
-    {
-        if (selectedCard != null)
-        {
-            setCardSelected(false);
-        }
-        deselectHex();
-        STATE = "CARD_SELECTED";
-
-        
-
-        selectedCard = goButton;
-
-        print(cards.IndexOf(selectedCard));
-
-        setCardSelected(true);
-
-        if (ourHex != null)
-        {
-            hoverHex(false);
-        }
-    }
-
-    void setCardSelected(bool selected)
-    {
-        if (selectedCard != null)
-        {
-            Vector3 pos = selectedCard.transform.position;
-            if (selected)
-            {
-                pos.y += cardSelectOffset;
-                if (!player.hasSacrificed())
-                {
-                    sacCardButton.enabled = true;
-                    sacCardButton.enabled = true;
-                }
-            }
-            else
-            {
-                pos.y -= cardSelectOffset;
-                sacCardButton.enabled = false;
-                sacCardButton.enabled = false;
-            }
-            selectedCard.transform.position = pos;
-        }
-    }
-
-    void removeCard()
-    {
-        Destroy(selectedCard);
-        cards.Remove(selectedCard);
-        selectedCard = null;
-    }
-
-    public void summonUnit(GameObject hex)
-    {
-        if (selectedCard != null)
-        {
-            Vector3 pos = hex.transform.position;
-
-            Card c = getSelCard();
-            GameObject variableForPrefab = (GameObject)Resources.Load("Prefabs/Unit_" + c.getId(), typeof(GameObject));
-            GameObject unit_go = Instantiate(variableForPrefab, pos, Quaternion.identity);
-            hex.GetComponent<Hex>().unit = unit_go.GetComponent<Unit>();
-            hex.GetComponent<Hex>().unit.initUnit(c.getId(), c.getName(), c.getAttack(), c.getHealth(), c.getCountdown(), 1);
-            hex.GetComponent<Hex>().unit.faceEnemyDirection(true);
-
-            pos = hex.transform.position;
-
-            player.consumeCard(cards.IndexOf(selectedCard));
-            updateResUI();
-            removeCard();
-
-            STATE = "";
-        }
-    }
-
-    void sacForResClicked() {
-        if (canSacrifice()) {
-            player.sacrificeResource(cards.IndexOf(selectedCard));
-            updateResUI();
-            removeCard();
-            printHand();
-        }
-    }
-
-    void updateResUI() {
-        resourcesText.text = player.getCurrRes() + "/" + player.getBaseRes();
-    }
-
-    void sacForCardsClicked()
-    {
-        if (canSacrifice())
-        {
-            player.sacrificeCards(cards.IndexOf(selectedCard));
-            addCardGUI(player.getHand()[player.getHand().Count-2]);
-            addCardGUI(player.getHand()[player.getHand().Count - 1]);
-            removeCard();
-
-            printHand();
-        }
-    }
-
-    void printHand() {
         string hand = "";
         for (int i = 0; i < player.getHand().Count; i++)
         {
@@ -357,55 +175,82 @@ public class MouseManager : MonoBehaviour
         print(hand);
     }
 
-    void endTurnClicked() {
-        setCardSelected(false);
-        selectedCard = null;
+    void endTurnClicked()
+    {
         player.endTurn();
 
         //ATTACK PHASE WOULD GO HERE...
 
-        for (int i = 0; i < map.userGrid.Count; i++)
+        if (attackManager.isThereAnyAttackingUnits(map.userGrid, true))
         {
-            Unit unit = map.userGrid[i].GetComponent<Hex>().unit;
+            STATE = "ATTACK_PHASE";
+        }
+        else
+        {
+            startEnemyTurn();
+        }
+    }
+
+    bool testPlace = false;
+
+    void startEnemyTurn()
+    {
+        //ENEMY TURN 
+        enemyPlayer.startTurn();
+        startTurnForUnits(map.enemyGrid);
+        enemyPlayer.sacrificeResource(0);
+        Card c = enemyPlayer.getHand()[0];
+        if (c.getCost() <= enemyPlayer.getCurrRes() && testPlace == false)
+        {
+            //placeUnit(c, GameObject.Find("Hex_e_1_3").GetComponent<Hex>(), enemyPlayer);
+            enemyPlayer.consumeCard(0);
+            testPlace = true;
+        }
+        enemyPlayer.endTurn();
+
+        if (attackManager.isThereAnyAttackingUnits(map.enemyGrid, false))
+        {
+            STATE = "ENEMY_ATTACK_PHASE";
+        }
+        else
+        {
+            startPlayerTurn();
+        }
+    }
+
+    void startPlayerTurn()
+    {
+        player.startTurn();
+        startTurnForUnits(map.userGrid);
+    }
+
+    void startTurnForUnits(List<Hex> grid)
+    {
+        for (int i = 0; i < grid.Count; i++)
+        {
+            Unit unit = grid[i].getUnit();
             if (unit != null)
             {
-                unit.currCountdown--;
-                if (unit.currCountdown <= 0) {
-                    unit.isAttacking = true;
-
-
-                    int y = map.userGrid[i].GetComponent<Hex>().y;
-                    bool hasEnemyTarget = false;
-
-                    for (int x = 0; x < 3; x++) {//FIND PREY
-                        Hex target = GameObject.Find("Hex_e_" + x + "_" + y).GetComponent<Hex>();
-                        if (target.unit != null) {
-                            unit.destination = target.transform.position;
-                            hasEnemyTarget = true;
-                            break;
-                        }
-                    }
-
-                    if (!hasEnemyTarget) {//NO ENEMY,..ATTACK THEIR SHIP!!
-                        Ship targetship = GameObject.Find("Ship_e_"+y).GetComponent<Ship>();
-                        unit.destination = targetship.transform.position;
-                    }
-                   
-                }
-
+                unit.onStartTurn();
             }
         }
-
-        player.startTurn();
-        addCardGUI(player.getHand()[player.getHand().Count - 1]);
-        updateResUI();
     }
 
-    bool canSacrifice() {
-        return selectedCard != null;
+    public static string getTurnState() {
+        return STATE;
     }
 
-    Card getSelCard() {
-        return player.getHand()[cards.IndexOf(selectedCard)];
+    void OnGUI()
+    {
+        resourcesText.text = player.getCurrRes() + "/" + player.getBaseRes();
+        enemyResourcesText.text = enemyPlayer.getBaseRes() + "/" + enemyPlayer.getCurrRes();
     }
+}
+
+public interface GameState {
+
+    void onHexClicked(Hex h);
+    void onUnitClicked(Hex h);
+    void onCardClicked(Card c, Player player);
+    void setContext(GameState state);
 }

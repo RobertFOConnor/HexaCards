@@ -1,0 +1,24 @@
+{
+	"id" : 6,
+	"name" : "Beast of Mining",
+	"description" : "Vaettr of the Wild",
+	"resourceCost" : 2,
+	"type" : "Alien",
+	"rarity" : 2,
+	"attack" : 1, 
+	"health" : 1,
+	"countdown" : 2,
+
+	"Items": [
+		{
+            "trigger": "onSummon",
+            "stat": "resources",
+            "amount": 1
+        },
+		{
+            "trigger": "onDestroyed",
+            "stat": "resources",
+            "amount": -1
+        }
+    ]
+}

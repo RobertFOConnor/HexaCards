@@ -1,0 +1,27 @@
+{
+	"id" : 11,
+	"name" : "Kinfolk jarl",
+	"description" : "Kinfolk jarl",
+	"resourceCost" : 1,
+	"type" : "Human",
+	"rarity" : 3,
+	"attack" : 4, 
+	"health" : 6,
+	"countdown" : 2,
+
+	"Items": [
+		{
+			"trigger" : "relentless"
+		},
+		{
+			"trigger" : "inspiring",
+			"stat": "attack",
+            "amount": 1
+		},
+		{
+			"trigger" : "onAdjacent",
+			"stat": "attack",
+            "amount": 1
+		}
+    ]
+}

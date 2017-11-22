@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 public class Map : MonoBehaviour {
@@ -7,7 +6,7 @@ public class Map : MonoBehaviour {
 	public GameObject hexPrefab;
     public GameObject shipPrefab;
 
-    public List<GameObject> userGrid, enemyGrid;
+    public List<Hex> userGrid, enemyGrid;
     public List<GameObject> userShips, enemyShips;
 
     // Size of the map in terms of number of hex tiles
@@ -67,7 +66,6 @@ public class Map : MonoBehaviour {
         {
             for (int y = 0; y < height; y++)
             {
-
                 float xPos = x * xOffset;
                 string name = "";
                 int xCoord = 0;
@@ -80,7 +78,7 @@ public class Map : MonoBehaviour {
                         xPos += xOffset / 2f;
                     }
                     xCoord = x;
-                    name = "Hex_" + xCoord + "_" + y;
+                    name = "Hex_";
                 }
                 else {
                     if (y % 2 == 1)
@@ -89,8 +87,9 @@ public class Map : MonoBehaviour {
                     }
                     xCoord = x - startX;
                     xCoord = width-1-xCoord;
-                    name = "Hex_e_" + xCoord + "_" + y;
+                    name = "Hex_e_";
                 }
+                name += xCoord + "_" + y;
 
                 GameObject hex_go = Instantiate(hexPrefab, new Vector3(xPos, 0, y * zOffset), Quaternion.identity);
 
@@ -98,24 +97,28 @@ public class Map : MonoBehaviour {
                 hex_go.name = name;
                 hex_go.layer = LayerMask.NameToLayer("Hex");
 
-                // Make sure the hex is aware of its place on the map
-                hex_go.GetComponent<Hex>().x = xCoord;
-                hex_go.GetComponent<Hex>().y = y;
-
                 // For a cleaner hierachy, parent this hex to the map
                 hex_go.transform.SetParent(this.transform);
 
                 // TODO: Quill needs to explain different optimization later...
                 hex_go.isStatic = true;
 
+                // Make sure the hex is aware of its place on the map
+                Hex hex = hex_go.GetComponent<Hex>();
+                hex.name = name;
+                hex.x = xCoord;
+                hex.y = y;
+                hex.pos = hex.transform.position;
+                hex.mr = hex_go.GetComponentInChildren<MeshRenderer>();
+               
+
                 if (isPlayer1)
                 {
-                    userGrid.Add(hex_go);
+                    userGrid.Add(hex);
                 }
                 else {
-                    enemyGrid.Add(hex_go);
+                    enemyGrid.Add(hex);
                 }
-
             }
         }
     }

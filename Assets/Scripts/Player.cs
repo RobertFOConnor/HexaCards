@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 
-public class Player : MonoBehaviour {
+public class Player {
 
     private List<Card> deck;
     private List<Card> currHand;
@@ -18,14 +16,30 @@ public class Player : MonoBehaviour {
 
     //Where in the deck to draw the card from
     private int drawPosition = 0;
+    public HandCardsUI handUI;
 
-    public Player(string name, List<Card> deck, bool isUser) {
+    public Player(string name, List<Card> deck, bool isUser)
+    {
         this.name = name;
         this.isUser = isUser;
         baseRes = 0;
         currRes = 0;
         this.deck = deck;
 
+        if (!isUser)
+        {
+            drawFirstCards();
+        }
+   
+    }
+
+    public void setHandUI(HandCardsUI handUI) {
+        this.handUI = handUI;
+        this.handUI.setPlayer(this);
+        drawFirstCards();
+    }
+
+    void drawFirstCards() {
         currHand = new List<Card>();
         for (int i = 0; i < 4; i++)
         {
@@ -33,18 +47,32 @@ public class Player : MonoBehaviour {
         }
     }
 
+
     public void drawCard()
     {
        
         currHand.Add(deck[drawPosition]);
+        if (isUser)
+        {
+            handUI.addCardGUI(deck[drawPosition]);
+        }
+
         drawPosition++;
 
         if (drawPosition >= deck.Count)
         {
             //Full cycle of deck!
             drawPosition = 0;
-        }
+        } 
     }
+
+    public void placeCard(Card c, Hex h) {
+
+        h.placeCard(this, c);
+        consumeCard(handUI.cards.IndexOf(handUI.selectedCard));
+        handUI.removeCard();
+    }
+
 
     public string getName()
     {
@@ -81,17 +109,32 @@ public class Player : MonoBehaviour {
         return sacrificed;
     }
 
-    public void addResource()
+    public bool isPlayer() {
+        return isUser;
+    }
+
+    public void sacrificeResource()
     {
-        baseRes++;
-        currRes++;
+        currHand.RemoveAt(handUI.cards.IndexOf(handUI.selectedCard));
+        sacrificed = true;
+        addResources(1);
+        handUI.removeCard();
+    }
+
+    public void sacrificeCards()
+    {
+        currHand.RemoveAt(handUI.cards.IndexOf(handUI.selectedCard));
+        sacrificed = true;
+        drawCard();
+        drawCard();
+        handUI.removeCard();
     }
 
     public void sacrificeResource(int index)
     {
         currHand.RemoveAt(index);
         sacrificed = true;
-        addResource();
+        addResources(1);
     }
 
     public void sacrificeCards(int index)
@@ -112,6 +155,11 @@ public class Player : MonoBehaviour {
 
     public void endTurn()
     {
+        if (isUser) {
+            handUI.setCardSelected(false);
+            handUI.selectedCard = null;
+        }
+
         startAttack();
     }
 
@@ -121,6 +169,10 @@ public class Player : MonoBehaviour {
         currHand.RemoveAt(index);
     }
 
+    public void addResources(int amount) {
+        this.baseRes += amount;
+        this.currRes += amount;
+    }
 
     public void startAttack()
     {
@@ -140,5 +192,10 @@ public class Player : MonoBehaviour {
     public bool isPlacing()
     {
         return state.Equals(Player.PLACING);
+    }
+
+    public bool canSacrifice()
+    {
+        return handUI.selectedCard != null && !hasSacrificed() && isPlacing();
     }
 }

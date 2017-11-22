@@ -1,0 +1,15 @@
+{
+	"id" : 1,
+	"name" : "Mega Gorgon",
+	"description" : "Sister of the bear",
+	"resourceCost" : 4,
+	"type" : "Alien",
+	"rarity" : 2,
+	"attack" : 4, 
+	"health" : 4,
+	"countdown" : 2,
+
+	"Items": [
+		
+    ]
+}

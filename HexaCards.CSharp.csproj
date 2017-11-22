@@ -75,15 +75,25 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\Card.cs" />
-    <Compile Include="Assets\Scripts\CardCreator.cs" />
-    <Compile Include="Assets\Scripts\CardUI.cs" />
+    <Compile Include="Assets\Scripts\AttackManager.cs" />
+    <Compile Include="Assets\Scripts\CamManager.cs" />
+    <Compile Include="Assets\Scripts\Card\Card.cs" />
+    <Compile Include="Assets\Scripts\Card\CardCreator.cs" />
+    <Compile Include="Assets\Scripts\Card\CardEffects.cs" />
+    <Compile Include="Assets\Scripts\Card\CardFactory.cs" />
+    <Compile Include="Assets\Scripts\Card\UI\CardUI.cs" />
+    <Compile Include="Assets\Scripts\Card\UI\HandCardsUI.cs" />
+    <Compile Include="Assets\Scripts\Card\UI\SacrificeMenu.cs" />
     <Compile Include="Assets\Scripts\Hex.cs" />
-    <Compile Include="Assets\Scripts\HoveringText.cs" />
+    <Compile Include="Assets\Scripts\JsonHelper.cs" />
     <Compile Include="Assets\Scripts\Map.cs" />
     <Compile Include="Assets\Scripts\MouseManager.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
     <Compile Include="Assets\Scripts\Ship.cs" />
+    <Compile Include="Assets\Scripts\States\CardState.cs" />
+    <Compile Include="Assets\Scripts\States\Context.cs" />
+    <Compile Include="Assets\Scripts\States\NullState.cs" />
+    <Compile Include="Assets\Scripts\States\UnitState.cs" />
     <Compile Include="Assets\Scripts\Unit.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />

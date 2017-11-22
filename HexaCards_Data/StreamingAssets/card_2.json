@@ -1,0 +1,19 @@
+{
+	"id" : 2,
+	"name" : "space dude",
+	"description" : "",
+	"resourceCost" : 2,
+	"type" : "Human",
+	"rarity" : 2,
+	"attack" : 3, 
+	"health" : 3,
+	"countdown" : 1,
+
+	"Items": [
+		{
+            "trigger": "onAttackShip",
+            "stat": "attack",
+            "amount": 2
+        }
+    ]
+}

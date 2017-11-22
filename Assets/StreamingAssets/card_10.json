@@ -1,0 +1,15 @@
+{
+	"id" : 10,
+	"name" : "Kinfolk ranger",
+	"description" : "Kinfolk ranger",
+	"resourceCost" : 3,
+	"type" : "Human",
+	"rarity" : 2,
+	"attack" : 2, 
+	"health" : 3,
+	"countdown" : 2,
+
+	"Items": [
+
+    ]
+}

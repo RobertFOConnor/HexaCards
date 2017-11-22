@@ -1,0 +1,27 @@
+{
+	"id" : 1,
+	"name" : "Mega Gorgon",
+	"description" : "",
+	"resourceCost" : 1,
+	"type" : "Alien",
+	"rarity" : 2,
+	"attack" : 1, 
+	"health" : 4,
+	"countdown" : 2,
+
+	"Items": [
+		{
+            "trigger": "onAttack",
+            "stat": "attack",
+            "amount": 1
+        },
+		{
+            "trigger": "onAttack",
+            "stat": "health",
+            "amount": 1
+        },
+		{
+            "trigger": "relentless"
+        }
+    ]
+}

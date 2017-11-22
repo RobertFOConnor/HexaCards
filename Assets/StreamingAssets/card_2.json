@@ -1,0 +1,17 @@
+{
+	"id" : 2,
+	"name" : "Swift Ranger",
+	"description" : "Ragged Wolf",
+	"resourceCost" : 1,
+	"type" : "Human",
+	"rarity" : 2,
+	"attack" : 1, 
+	"health" : 2,
+	"countdown" : 2,
+
+	"Items": [
+		{
+            "trigger": "haste"
+        }
+    ]
+}
